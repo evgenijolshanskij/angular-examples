@@ -1,0 +1,20 @@
+.form-container {
+    padding: 0 100px 0 20px;
+    height: 100%;
+    overflow: auto;
+    margin: auto;
+}
+
+.form-title {
+    display: flex;
+    align-items: center;
+}
+
+.form {
+    width: 400px;
+    margin-top: 20px;
+}
+
+.margin-top-10 {
+    margin-top: 10px;
+}
