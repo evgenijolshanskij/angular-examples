@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('ae.controllers', []);
 angular.module('ae.directives', []);
+angular.module('ae.controllers', []);
 
 // Declare app level module which depends on views, and components
 var ae = angular.module('ae', [
     'ui.router',
-    'ae.controllers',
-    'ae.directives'
+    'ae.directives',
+    'ae.controllers'
 ]);
 
 ae.config(function($stateProvider, $urlRouterProvider) {

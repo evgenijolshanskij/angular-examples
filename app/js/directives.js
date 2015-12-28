@@ -1,6 +1,6 @@
 'use strict';
 
-var directives = angular.module('directives.directives', []);
+var directives = angular.module('ae.directives', []);
 
 /**
  *
@@ -10,7 +10,6 @@ directives.directive('nonAutofillField', ['$parse', function ($parse) {
     var isFocused = false;
 
     function link(scope, elem, attrs, ngModel) {
-        console.log("fullscreen");
         // Binds focus event to element
         elem.bind("focus", function () {
             isFocused = true
@@ -57,14 +56,14 @@ directives.directive('fullscreen', ['$compile', function ($compile) {
     return {
         restrict: 'C',
         link: link,
-        controller: ['$scope', controller]
+        controller: ['$scope', '$timeout', controller]
     }
 }]);
 
 /**
  *
  */
-directives.directive('modalWrapper',["$compile", "$document", function ($compile, $document) {
+directives.directive('modalWrapper',["$compile", "$document", '$timeout', function ($compile, $document, $timeout) {
 
     /*
      Modal window template
@@ -76,6 +75,8 @@ directives.directive('modalWrapper',["$compile", "$document", function ($compile
         '</div>' +
         '<div class="modal-body row" style="margin: 0; display: flex;"></div>' +
         '</div>';
+
+    var chart;
 
     /*
      Directive's link function
@@ -95,15 +96,23 @@ directives.directive('modalWrapper',["$compile", "$document", function ($compile
                 if (newVal) {                                               // Modal being opened
                     fullscreenIcon.addClass("ng-hide");                     // Hide fullscreen icon in modal
                     element.insertBefore(modalEl);                          // JQuery is required for using this function
-                    element.find(".modal-body").append(modalEl.children()); // Put `block` element inside the modal
+                    var content = modalEl.children();
+                    content.removeClass('col-md-4');
+                    content.addClass('col-md-10');
+                    element.find(".modal-body").append(content);            // Put `block` element inside the modal
                     modalEl.remove();                                       // Remove <modal-wrapper> tag
                     angular.element('#modal-fullscreen').show();            // Make modal visible
+                    chart = content.scope()[element.find('canvas').attr('id')];
+                    chart.resize(chart.render, true);
 
                 } else if (!newVal) {                                       // Modal being closed
                     fullscreenIcon.removeClass("ng-hide");                  // Show fullscreen icon after modal's closed
                     var modalBody = modalEl.find(".modal-body").children(); // Get `block` element
+                    modalBody.removeClass('col-md-10');
+                    modalBody.addClass('col-md-4');
                     modalBody.insertBefore(modalEl);                        // Move `block` element
                     modalEl.remove();                                       // Remove modal
+                    chart.resize(chart.render, true);
                 }
             })
     };
