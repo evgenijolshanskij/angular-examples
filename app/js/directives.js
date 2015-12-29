@@ -98,7 +98,7 @@ directives.directive('modalWrapper',["$compile", "$document", '$timeout', functi
                     element.insertBefore(modalEl);                          // JQuery is required for using this function
                     var content = modalEl.children();
                     content.removeClass('col-md-4');
-                    content.addClass('col-md-10');
+                    content.addClass('col-md-12');
                     element.find(".modal-body").append(content);            // Put `block` element inside the modal
                     modalEl.remove();                                       // Remove <modal-wrapper> tag
                     angular.element('#modal-fullscreen').show();            // Make modal visible
@@ -108,7 +108,7 @@ directives.directive('modalWrapper',["$compile", "$document", '$timeout', functi
                 } else if (!newVal) {                                       // Modal being closed
                     fullscreenIcon.removeClass("ng-hide");                  // Show fullscreen icon after modal's closed
                     var modalBody = modalEl.find(".modal-body").children(); // Get `block` element
-                    modalBody.removeClass('col-md-10');
+                    modalBody.removeClass('col-md-12');
                     modalBody.addClass('col-md-4');
                     modalBody.insertBefore(modalEl);                        // Move `block` element
                     modalEl.remove();                                       // Remove modal

@@ -1,6 +1,16 @@
 <div class="row" style="height: 200px" ng-init="init()" ng-controller="FullscreenModeController">
     <!-- Class `block` is just a marker that determines bound of element could be opened in fullscreen -->
     <div ng-repeat="chart in data" class="col-md-4 block fullscreen">
-        <canvas id="{{chart.name}}"></canvas>
+        <div class="row">
+            <div class="col-md-10">
+                <canvas id="{{chart.name}}"></canvas>
+            </div>
+            <div ng-if="showLegend()" class="col-md-2">
+                <div ng-repeat="dataset in chart.datasets" class="row">
+                    <label class="col-lg-10">{{dataset.label}}</label>
+                    <input type="checkbox" ng-model="dataset.show" ng-change="changeDataset(chart, dataset)" class="col-lg-2"/>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
