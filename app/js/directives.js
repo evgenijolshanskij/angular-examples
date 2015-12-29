@@ -36,12 +36,16 @@ directives.directive('nonAutofillField', ['$parse', function ($parse) {
 directives.directive('fullscreen', ['$compile', function ($compile) {
 
     var link = function (scope, element) {
+        console.log(scope);
         // Compiles the icon button for opening the fullscreen mode
         var fullscreenButton = angular.element($compile(
             '<div class="row">' +
-            '<span class="pull-right">' +
-            '<span name="fullscreen" ng-click="fullscreenMode($event)" tooltip="Expand" style="cursor: pointer"><i class="glyphicon glyphicon-fullscreen"></i></span>' +
-            '</span>' +
+                '<span class="pull-right">' +
+                    // Scope information
+                    '<p>(scope id: <b>' + scope.$id + '</b>)</p>' +
+                    '<p>(parent scope id: <b>' + scope.$parent.$id + '</b>)</p>' +
+                    '<span name="fullscreen" ng-click="fullscreenMode($event)" tooltip="Expand" style="cursor: pointer"><i class="glyphicon glyphicon-fullscreen"></i></span>' +
+                '</span>' +
             '</div>'
         )(scope));
         element.prepend(fullscreenButton)
