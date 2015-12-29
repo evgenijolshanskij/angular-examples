@@ -151,6 +151,7 @@ controllers.controller('FullscreenModeController', ['$scope', '$timeout', functi
         $scope[chart.name].update();
     };
 
+    // Create Chart instances
     var draw = function () {
         $.each($scope.data, function (i, v) {
             var ctx = angular.element('#' + v.name).get(0).getContext('2d');
@@ -161,12 +162,7 @@ controllers.controller('FullscreenModeController', ['$scope', '$timeout', functi
         });
     };
 
-    var update = function () {
-        $.each($scope.data, function (i, v) {
-            $scope[v.name].render();
-        });
-    };
-
+    // Wait until page is loaded.
     $timeout(function () {
         draw();
     });
