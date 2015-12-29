@@ -38,9 +38,11 @@ directives.directive('fullscreen', ['$compile', function ($compile) {
     var link = function (scope, element) {
         // Compiles the icon button for opening the fullscreen mode
         var fullscreenButton = angular.element($compile(
+            '<div class="row">' +
             '<span class="pull-right">' +
             '<span name="fullscreen" ng-click="fullscreenMode($event)" tooltip="Expand" style="cursor: pointer"><i class="glyphicon glyphicon-fullscreen"></i></span>' +
-            '</span>'
+            '</span>' +
+            '</div>'
         )(scope));
         element.prepend(fullscreenButton)
     };
