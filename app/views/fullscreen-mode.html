@@ -7,8 +7,8 @@
             </div>
             <div ng-if="showLegend()" class="col-md-2">
                 <div ng-repeat="dataset in chart.datasets" class="row">
-                    <label class="col-lg-10">{{dataset.label}}</label>
-                    <input type="checkbox" ng-model="dataset.show" ng-change="changeDataset(chart, dataset)" class="col-lg-2"/>
+                    <label>{{dataset.label}}</label>
+                    <input type="checkbox" ng-model="dataset.show" ng-change="changeDataset(chart, dataset)" style="margin-left: 10px"/>
                 </div>
             </div>
         </div>
