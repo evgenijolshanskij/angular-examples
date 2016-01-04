@@ -33,11 +33,11 @@ directives.directive('nonAutofillField', ['$parse', function ($parse) {
 /**
  *
  */
-directives.directive('fullscreen', ['$compile', function ($compile) {
+directives.directive('fullscreenBlock', ['$compile', function ($compile) {
 
-    var link = function (scope, element) {
-        console.log(scope);
-        // Compiles the icon button for opening the fullscreen mode
+    var link = function (scope, element, attrs) {
+        // Compiles DEFAULT icon button for opening the fullscreen mode.
+        // fullscreenButton can be overridden by passing html code as a value of `fullscreen-block` attribute.
         var fullscreenButton = angular.element($compile(
             '<div class="row">' +
                 '<div class="col-md-10 col-sm-10 col-xs-10">' +
@@ -50,19 +50,25 @@ directives.directive('fullscreen', ['$compile', function ($compile) {
                 '</div>' +
             '</div>'
         )(scope));
-        element.prepend(fullscreenButton)
+        element.prepend((attrs.fullscreenBlock.length > 0) ? attrs.fullscreenBlock : fullscreenButton);
     };
+
+    var closest = function (element) {
+        return (angular.element(element).parent().attr('fullscreen-block') !== undefined) ?
+            angular.element(element).parent() :
+            closest(angular.element(element).parent());
+    };
+
     var controller = function ($scope) {
         // Handles click event
         $scope.fullscreenMode = function (event) {
             var modalWrapper = '<modal-wrapper></modal-wrapper>';
-            angular.element(event.target).closest('.block').wrap(modalWrapper);
+            angular.element(closest(event.target)).wrap(modalWrapper);
             $compile(modalWrapper)($scope);
         };
     };
 
     return {
-        restrict: 'C',
         link: link,
         controller: ['$scope', '$timeout', controller]
     }
@@ -103,7 +109,7 @@ directives.directive('modalWrapper',["$compile", "$document", function ($compile
                 var fullscreenIcon = modalEl.find('[name="fullscreen"]');
                 if (newVal) {                                               // Modal being opened
                     fullscreenIcon.addClass("ng-hide");                     // Hide fullscreen icon in modal
-                    element.insertBefore(modalEl);                          // JQuery is required for using this function
+                    modalEl[0].parentNode.insertBefore(element[0], modalEl[0]);
                     var content = modalEl.children();                       // Gets content to be shown in fullscreen
                     content.removeClass('col-md-4');                        // Resize content
                     content.addClass('col-md-12');                          // Resize content
@@ -119,7 +125,7 @@ directives.directive('modalWrapper',["$compile", "$document", function ($compile
                     var modalBody = modalEl.find(".modal-body").children(); // Get `block` element
                     modalBody.removeClass('col-md-12');                     // Resize content
                     modalBody.addClass('col-md-4');                         // Resize content
-                    modalBody.insertBefore(modalEl);                        // Move `block` element
+                    modalEl[0].parentNode.insertBefore(modalBody[0], modalEl[0]);
                     modalEl.remove();                                       // Remove modal
                     // Actions needed only for chart
                     chart.resize(chart.render, true);

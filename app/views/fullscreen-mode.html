@@ -1,6 +1,5 @@
 <div class="row" ng-controller="FullscreenModeController">
-    <!-- Class `block` is just a marker that determines bound of element could be opened in fullscreen -->
-    <div ng-repeat="chart in data" class="col-md-4 block fullscreen">
+    <div fullscreen-block ng-repeat="chart in data" class="col-md-4">
         <div class="row">
             <div class="col-md-10">
                 <canvas id="{{chart.name}}"></canvas>

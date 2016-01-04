@@ -130,7 +130,7 @@ controllers.controller('FullscreenModeController', ['$scope', '$timeout', functi
     ];
 
     $scope.showLegend = function () {
-        return angular.element('div.fullscreen').hasClass('col-md-12');
+        return angular.element('div[fullscreen-block]').hasClass('col-md-12');
     };
 
     /**
@@ -140,7 +140,7 @@ controllers.controller('FullscreenModeController', ['$scope', '$timeout', functi
      * @param dataset should be updated.
      */
     $scope.changeDataset = function (chart, dataset) {
-        $.each($scope[chart.name].datasets, function (i, ds) {
+        angular.forEach($scope[chart.name].datasets, function (ds) {
             if (dataset.label === ds.label) {
                 var fillColor = ds.fillColor;
                 var strokeColor = ds.strokeColor;
@@ -153,7 +153,7 @@ controllers.controller('FullscreenModeController', ['$scope', '$timeout', functi
 
     // Create Chart instances
     var draw = function () {
-        $.each($scope.data, function (i, v) {
+        angular.forEach($scope.data, function (v) {
             var ctx = angular.element('#' + v.name).get(0).getContext('2d');
             var chart = new Chart(ctx);
             $scope[v.name] = chart.Line(v, {
