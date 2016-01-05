@@ -35,14 +35,20 @@ directives.directive('nonAutofillField', ['$parse', function ($parse) {
  */
 directives.directive('fullscreenBlock', ['$compile', function ($compile) {
 
+    // Wraps in angular.element object for more code clearance
+    var aEl = function (element) {
+        return angular.element(element);
+    };
+
     var link = function (scope, element, attrs) {
-        // Compiles DEFAULT icon button for opening the fullscreen mode.
-        // fullscreenButton can be overridden by passing html code as a value of `fullscreen-block` attribute.
+        // Compiles the default 'fullscreen' button for opening the fullscreen mode.
+        // This fullscreenButton can be overridden by passing a custom html string to
+        // the `fullscreen-block` attribute.
         var fullscreenButton = function () {
-            return angular.element($compile(
+            return aEl($compile(
                 '<div class="row">' +
                     '<div class="col-md-10 col-sm-10 col-xs-10">' +
-                        // Scope information
+                        // scope information
                         '<p>(scope id: <b>' + scope.$id + '</b>)</p>' +
                         '<p>(parent scope id: <b>' + scope.$parent.$id + '</b>)</p>' +
                     '</div>' +
@@ -52,7 +58,7 @@ directives.directive('fullscreenBlock', ['$compile', function ($compile) {
                 '</div>'
             )(scope));
         };
-
+        // if there is no custom html passed to the attribute, default one is used
         element.prepend((attrs.fullscreenBlock.length > 0) ? attrs.fullscreenBlock : fullscreenButton());
     };
 
@@ -61,16 +67,16 @@ directives.directive('fullscreenBlock', ['$compile', function ($compile) {
     // This function can be replaced with JQuery's `closest()` method
     // if JQuery library is in use.
     var closest = function (element) {
-        return (angular.element(element).parent().attr('fullscreen-block') !== undefined) ?
-            angular.element(element).parent() :
-            closest(angular.element(element).parent());
+        return (aEl(element).parent().attr('fullscreen-block') !== undefined) ?
+            aEl(element).parent() :
+                closest(aEl(element).parent());
     };
 
     var controller = function ($scope) {
         // Handles click event
         $scope.fullscreenMode = function (event) {
             var modalWrapper = '<modal-wrapper></modal-wrapper>';
-            angular.element(closest(event.target)).wrap(modalWrapper);
+            aEl(closest(event.target)).wrap(modalWrapper);
             $compile(modalWrapper)($scope);
         };
     };
@@ -118,6 +124,7 @@ directives.directive('modalWrapper',["$compile", "$document", function ($compile
                 if (newVal) {
                     // Hide fullscreen icon in modal
                     fullscreenIcon.addClass("ng-hide");
+                    // puts the element inside the modal
                     modalEl[0].parentNode.insertBefore(element[0], modalEl[0]);
                     // Gets content to be shown in fullscreen
                     var content = modalEl.children();
@@ -135,6 +142,7 @@ directives.directive('modalWrapper',["$compile", "$document", function ($compile
                 } else if (!newVal) {
                     // Show fullscreen icon after modal's closed
                     fullscreenIcon.removeClass("ng-hide");
+                    // looks up the element
                     var modalBody = modalEl.find(".modal-body").children();
                     modalEl[0].parentNode.insertBefore(modalBody[0], modalEl[0]);
                     // Remove modal
