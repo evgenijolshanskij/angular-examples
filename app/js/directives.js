@@ -69,7 +69,7 @@ directives.directive('fullscreenBlock', ['$compile', function ($compile) {
     var closest = function (element) {
         return (aEl(element).parent().attr('fullscreen-block') !== undefined) ?
             aEl(element).parent() :
-                closest(aEl(element).parent());
+            closest(aEl(element).parent());
     };
 
     var controller = function ($scope) {
