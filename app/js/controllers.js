@@ -130,7 +130,7 @@ controllers.controller('FullscreenModeController', ['$scope', '$timeout', functi
     ];
 
     $scope.showLegend = function () {
-        return angular.element('div[fullscreen-block]').hasClass('col-md-12');
+        return angular.element('div[fullscreen-block]').hasClass('expand');
     };
 
     /**
