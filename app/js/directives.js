@@ -35,17 +35,14 @@ directives.directive('nonAutofillField', ['$parse', function ($parse) {
  */
 directives.directive('fullscreenBlock', ['$compile', function ($compile) {
 
-    // Wraps in angular.element object for more code clearance
-    var aEl = function (element) {
-        return angular.element(element);
-    };
+    var jqLite = angular.element;
 
     var link = function (scope, element, attrs) {
         // Compiles the default 'fullscreen' button for opening the fullscreen mode.
         // This fullscreenButton can be overridden by passing a custom html string to
         // the `fullscreen-block` attribute.
         var fullscreenButton = function () {
-            return aEl($compile(
+            return jqLite($compile(
                 '<div class="row">' +
                     '<div class="col-md-10 col-sm-10 col-xs-10">' +
                         // scope information
@@ -67,23 +64,23 @@ directives.directive('fullscreenBlock', ['$compile', function ($compile) {
     // This function can be replaced with JQuery's `closest()` method
     // if JQuery library is in use.
     var closest = function (element) {
-        return (aEl(element).parent().attr('fullscreen-block') !== undefined) ?
-            aEl(element).parent() :
-            closest(aEl(element).parent());
+        return (jqLite(element).parent().attr('fullscreen-block') !== undefined) ?
+            jqLite(element).parent() :
+            closest(jqLite(element).parent());
     };
 
     var controller = function ($scope) {
         // Handles click event
         $scope.fullscreenMode = function (event) {
             var modalWrapper = '<modal-wrapper></modal-wrapper>';
-            aEl(closest(event.target)).wrap(modalWrapper);
+            jqLite(closest(event.target)).wrap(modalWrapper);
             $compile(modalWrapper)($scope);
         };
     };
 
     return {
         link: link,
-        controller: ['$scope', '$timeout', controller]
+        controller: ['$scope', controller]
     }
 }]);
 
@@ -91,6 +88,8 @@ directives.directive('fullscreenBlock', ['$compile', function ($compile) {
  *
  */
 directives.directive('modalWrapper',["$compile", "$document", function ($compile, $document) {
+
+    var jqLite = angular.element;
 
     /*
      Modal window template
@@ -113,47 +112,43 @@ directives.directive('modalWrapper',["$compile", "$document", function ($compile
         scope.open();
 
         // Watches whether modal should be opened
-        scope.$watch(
-            function () {
-                return scope.showModal
-            },
-            function (newVal) {
-                var modalEl = $document.find('modal-wrapper');
-                var fullscreenIcon = modalEl.find('[name="fullscreen"]');
-                // Modal being opened
-                if (newVal) {
-                    // Hide fullscreen icon in modal
-                    fullscreenIcon.addClass("ng-hide");
-                    // puts the element inside the modal
-                    modalEl[0].parentNode.insertBefore(element[0], modalEl[0]);
-                    // Gets content to be shown in fullscreen
-                    var content = modalEl.children();
-                    element.find(".modal-body").append(content);
-                    // Remove <modal-wrapper> tag
-                    modalEl.remove();
-                    // Make modal visible
-                    angular.element('#modal-fullscreen').show();
-                    // changing element's width
-                    content.addClass('expand');
-                    // initializing chart variable.
-                    // Following line is suitable just for this concrete case.
-                    chart = content.scope()[element.find('canvas').attr('id')];
-                // Modal being closed
-                } else if (!newVal) {
-                    // Show fullscreen icon after modal's closed
-                    fullscreenIcon.removeClass("ng-hide");
-                    // looks up the element
-                    var modalBody = modalEl.find(".modal-body").children();
-                    modalEl[0].parentNode.insertBefore(modalBody[0], modalEl[0]);
-                    // Remove modal
-                    modalEl.remove();
-                    // changing element's width
-                    modalBody.removeClass('expand');
-                }
-                // Triggers chart's resizing.
+        scope.$watch('showModal', function (newVal) {
+            var modalEl = jqLite('modal-wrapper');
+            var fullscreenIcon = modalEl.find('[name="fullscreen"]');
+            // Modal being opened
+            if (newVal) {
+                // Hide fullscreen icon in modal
+                fullscreenIcon.addClass("ng-hide");
+                // puts the element inside the modal
+                modalEl[0].parentNode.insertBefore(element[0], modalEl[0]);
+                // Gets content to be shown in fullscreen
+                var content = modalEl.children();
+                element.find(".modal-body").append(content);
+                // Remove <modal-wrapper> tag
+                modalEl.remove();
+                // Make modal visible
+                jqLite('#modal-fullscreen').show();
+                // changing element's width
+                content.addClass('expand');
+                // initializing chart variable.
                 // Following line is suitable just for this concrete case.
-                chart.resize(chart.render, true);
-            })
+                chart = content.scope()[element.find('canvas').attr('id')];
+            // Modal being closed
+            } else if (!newVal) {
+                // Show fullscreen icon after modal's closed
+                fullscreenIcon.removeClass("ng-hide");
+                // looks up the element
+                var modalBody = modalEl.find(".modal-body").children();
+                modalEl[0].parentNode.insertBefore(modalBody[0], modalEl[0]);
+                // Remove modal
+                modalEl.remove();
+                // changing element's width
+                modalBody.removeClass('expand');
+            }
+            // Triggers chart's resizing.
+            // Following line is suitable just for this concrete case.
+            chart.resize(chart.render, true);
+        })
     };
 
     /*

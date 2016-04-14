@@ -12,6 +12,9 @@
     "angular-mocks": "~1.4.0",
     "html5-boilerplate": "~5.2.0",
     "Chart.js": "~1.0.2",
-    "angular-chart.js": "~0.8.8"
+    "angular-chart.js": "~0.8.8",
+    "angular-ui-router": "~0.2.18",
+    "jquery": "~2.2.3",
+    "bootstrap": "^3.3.6"
   }
 }
